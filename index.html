@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MicroMates Multiplayer</title>
+  <title>MicroMates Multiplayer with Threat Pieces</title>
   <style>
     body {
       font-family: sans-serif;
@@ -19,7 +19,7 @@
       padding: 6px;
       margin-bottom: 20px;
     }
-    .mate-line {
+    .mate-line, .threat-piece-line {
       margin: 10px 0;
       font-size: 16px;
     }
@@ -32,8 +32,7 @@
       border-top: 1px solid #ccc;
       padding-top: 20px;
     }
-    #threat-damage {
-      font-size: 18px;
+    #threat-section h2 {
       margin-bottom: 10px;
     }
   </style>
@@ -60,11 +59,11 @@
 
   <!-- Threat Damage Section -->
   <div id="threat-section">
-    <p id="threat-damage">Threat Total Damage: <span id="threatTotal">0</span></p>
-    <button onclick="addThreatDamage(10)">Add 10 Damage</button>
-    <button onclick="addThreatDamage(50)">Add 50 Damage</button>
-    <button onclick="addThreatDamage(100)">Add 100 Damage</button>
-    <button onclick="defeatThreat()">Defeated Threat</button>
+    <h2>Threat Pieces</h2>
+    <div id="threatPieces">
+      <!-- Threat pieces will be dynamically generated here -->
+    </div>
+    <button onclick="defeatThreat()">Defeated Threat (Reset All)</button>
   </div>
 
 <script>
@@ -99,7 +98,13 @@
     }
   };
 
-  let threatDamage = 0;
+  // Four threat pieces, each with damage
+  const threatPieces = {
+    Piece1: 0,
+    Piece2: 0,
+    Piece3: 0,
+    Piece4: 0
+  };
 
   function rollAndApply() {
     const selectedPlayer = document.getElementById("playerSelect").value;
@@ -135,13 +140,20 @@
     updateDisplay();
   }
 
-  function addThreatDamage(amount) {
-    threatDamage += amount;
+  function addThreatDamage(piece, amount) {
+    threatPieces[piece] += amount;
+    updateDisplay();
+  }
+
+  function resetThreatPiece(piece) {
+    threatPieces[piece] = 0;
     updateDisplay();
   }
 
   function defeatThreat() {
-    threatDamage = 0;
+    for (const p in threatPieces) {
+      threatPieces[p] = 0;
+    }
     updateDisplay();
   }
 
@@ -150,7 +162,7 @@
     const mates = players[selectedPlayer].mates;
     const totalsDiv = document.getElementById("totals");
 
-    // Clear previous
+    // Clear previous mates display
     totalsDiv.innerHTML = "";
 
     for (const mate in mates) {
@@ -167,8 +179,23 @@
       totalsDiv.appendChild(div);
     }
 
-    // Update threat damage display
-    document.getElementById("threatTotal").textContent = threatDamage;
+    // Threat pieces display
+    const threatDiv = document.getElementById("threatPieces");
+    threatDiv.innerHTML = ""; // clear old
+
+    for (const piece in threatPieces) {
+      const dmg = threatPieces[piece];
+      const div = document.createElement("div");
+      div.className = "threat-piece-line";
+      div.innerHTML = `
+        ${piece} Damage: <span>${dmg}</span>
+        <button onclick="addThreatDamage('${piece}', 10)">+10</button>
+        <button onclick="addThreatDamage('${piece}', 50)">+50</button>
+        <button onclick="addThreatDamage('${piece}', 100)">+100</button>
+        <button onclick="resetThreatPiece('${piece}')">Reset</button>
+      `;
+      threatDiv.appendChild(div);
+    }
   }
 
   // Initialize display on load
