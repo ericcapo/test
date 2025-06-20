@@ -1,4 +1,4 @@
-const targets = ["Enemy 1", "Enemy 2", "Player A", "Player B"];
+const targets = ["Mate1", "Mate2", "Mate3"];
 let currentTarget = "";
 let currentDamage = 0;
 
