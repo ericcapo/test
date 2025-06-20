@@ -1,41 +1,201 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MicroMates</title>
+  <title>Card Game Companion</title>
   <style>
     body {
       font-family: sans-serif;
+      padding: 20px;
       text-align: center;
-      margin-top: 40px;
     }
-    button {
-      padding: 12px 24px;
-      margin: 20px;
-      font-size: 18px;
+    input, select, button {
+      margin: 5px;
+      padding: 6px;
+    }
+    .mate-entry {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin: 8px 0;
+    }
+    .mate-entry span {
+      min-width: 150px;
+      text-align: left;
+    }
+    .player-section {
+      margin-bottom: 20px;
     }
     #log {
-      list-style: none;
-      padding: 0;
-      font-size: 16px;
+      text-align: left;
+      display: inline-block;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
-  <h1>MicroMates</h1>
-  <button onclick="rollAndApply()">🎯 Roll & Apply</button>
-  <ul id="log"></ul>
+  <h1>Card Game Companion</h1>
+
+  <div id="setup">
+    <h2>Enter Mates</h2>
+    <form id="mateForm">
+      <div id="players"></div>
+      <button type="submit">Save Mates</button>
+    </form>
+  </div>
+
+  <div id="game" style="display:none;">
+    <h2>Damage Tracker</h2>
+    
+    <label for="playerSelect">Select Player:</label>
+    <select id="playerSelect"></select>
+    
+    <label for="mateSelect">Select Mate:</label>
+    <select id="mateSelect"></select>
+
+    <div style="margin-top: 10px;">
+      <button onclick="rollDamage()">🎯 Roll Damage</button>
+      <p id="rolledDamage">Damage: -</p>
+      <button onclick="applyDamage()">✅ Apply</button>
+    </div>
+
+    <h3>Mates Overview</h3>
+    <div id="mateOverview"></div>
+
+    <h3>Damage Log</h3>
+    <ul id="log"></ul>
+  </div>
 
   <script>
-    const targets = ["Mate1", "Mate2", "Mate3"];
+    const playerCount = 4;
+    const matesPerPlayer = 3;
+    const players = {};
+    let currentDamage = 0;
 
-    function rollAndApply() {
-      const target = targets[Math.floor(Math.random() * targets.length)];
-      const damage = (Math.floor(Math.random() * 10) + 1) * 10;
-      const log = document.getElementById("log");
-      const entry = document.createElement("li");
-      entry.textContent = `${target} takes ${damage} damage`;
-      log.appendChild(entry);
+    window.onload = () => {
+      const playerDiv = document.getElementById("players");
+      for (let i = 1; i <= playerCount; i++) {
+        const section = document.createElement("div");
+        section.className = "player-section";
+        section.innerHTML = \`<h3>Player \${i}</h3>\`;
+        for (let j = 1; j <= matesPerPlayer; j++) {
+          section.innerHTML += \`<input type="text" name="p\${i}m\${j}" placeholder="Mate \${j}" required>\`;
+        }
+        playerDiv.appendChild(section);
+      }
+
+      document.getElementById("mateForm").addEventListener("submit", e => {
+        e.preventDefault();
+        for (let i = 1; i <= playerCount; i++) {
+          const name = \`Player \${i}\`;
+          players[name] = [];
+          for (let j = 1; j <= matesPerPlayer; j++) {
+            const val = document.querySelector(\`input[name="p\${i}m\${j}"]\`).value;
+            players[name].push({ name: val, damage: 0 });
+          }
+        }
+        document.getElementById("setup").style.display = "none";
+        document.getElementById("game").style.display = "block";
+        populatePlayers();
+      });
+    };
+
+    function populatePlayers() {
+      const playerSelect = document.getElementById("playerSelect");
+      playerSelect.innerHTML = "";
+      for (let p in players) {
+        const option = document.createElement("option");
+        option.value = p;
+        option.textContent = p;
+        playerSelect.appendChild(option);
+      }
+      playerSelect.onchange = () => {
+        populateMates();
+        showMateOverview();
+      };
+      populateMates();
+      showMateOverview();
+    }
+
+    function populateMates() {
+      const player = document.getElementById("playerSelect").value;
+      const mateSelect = document.getElementById("mateSelect");
+      mateSelect.innerHTML = "";
+      players[player].forEach((mate, index) => {
+        const option = document.createElement("option");
+        option.value = index;
+        option.textContent = \`\${mate.name} (Damage: \${mate.damage})\`;
+        mateSelect.appendChild(option);
+      });
+    }
+
+    function rollDamage() {
+      currentDamage = (Math.floor(Math.random() * 10) + 1) * 10;
+      document.getElementById("rolledDamage").textContent = "Damage: " + currentDamage;
+    }
+
+    function applyDamage() {
+      const player = document.getElementById("playerSelect").value;
+      const mateIndex = document.getElementById("mateSelect").value;
+      if (player && mateIndex !== "") {
+        const mate = players[player][mateIndex];
+        mate.damage += currentDamage;
+        const logEntry = document.createElement("li");
+        logEntry.textContent = \`\${mate.name} (from \${player}) takes \${currentDamage} damage. Total: \${mate.damage}\`;
+        document.getElementById("log").appendChild(logEntry);
+        currentDamage = 0;
+        document.getElementById("rolledDamage").textContent = "Damage: -";
+        populateMates();
+        showMateOverview();
+      }
+    }
+
+    function showMateOverview() {
+      const container = document.getElementById("mateOverview");
+      container.innerHTML = "";
+      const player = document.getElementById("playerSelect").value;
+      players[player].forEach((mate, index) => {
+        const div = document.createElement("div");
+        div.className = "mate-entry";
+        div.innerHTML = \`
+          <span>\${mate.name} — Damage: \${mate.damage}</span>
+          <button onclick="resetMate('\${player}', \${index})">🔁 Reset</button>
+          <button onclick="defeatMate('\${player}', \${index})">🪦 Defeat</button>
+        \`;
+        container.appendChild(div);
+      });
+      const addBtn = document.createElement("button");
+      addBtn.textContent = "➕ Add Mate";
+      addBtn.onclick = () => addMate(player);
+      container.appendChild(addBtn);
+    }
+
+    function resetMate(player, index) {
+      players[player][index].damage = 0;
+      showMateOverview();
+      populateMates();
+    }
+
+    function defeatMate(player, index) {
+      const removed = players[player].splice(index, 1);
+      const logEntry = document.createElement("li");
+      logEntry.textContent = \`\${removed[0].name} (from \${player}) is defeated and removed from the game.\`;
+      document.getElementById("log").appendChild(logEntry);
+      showMateOverview();
+      populateMates();
+    }
+
+    function addMate(player) {
+      const name = prompt("Enter new mate's name:");
+      if (name) {
+        players[player].push({ name: name, damage: 0 });
+        showMateOverview();
+        populateMates();
+      }
     }
   </script>
 </body>
 </html>
+
+
+
