@@ -9,17 +9,16 @@
       margin-top: 40px;
     }
     button {
-      padding: 12px 24px;
-      margin: 20px;
-      font-size: 18px;
+      padding: 6px 12px;
+      margin: 5px;
+      font-size: 14px;
     }
     #result {
       font-size: 18px;
       margin-top: 20px;
     }
-    #totals {
-      font-size: 16px;
-      margin-top: 20px;
+    .mate-line {
+      margin: 10px 0;
     }
   </style>
 </head>
@@ -30,21 +29,44 @@
   <div id="result">No damage yet</div>
 
   <div id="totals">
-    <p>Mate1 Total Damage: <span id="d1">0</span></p>
-    <p>Mate2 Total Damage: <span id="d2">0</span></p>
-    <p>Mate3 Total Damage: <span id="d3">0</span></p>
+    <div class="mate-line" id="line1">
+      <p>Mate1 Total Damage: <span id="d1">0</span></p>
+      <button onclick="resetMate('Mate1')">❌ No Mate</button>
+      <button onclick="addMate('Mate1')">➕ Add Mate</button>
+    </div>
+    <div class="mate-line" id="line2">
+      <p>Mate2 Total Damage: <span id="d2">0</span></p>
+      <button onclick="resetMate('Mate2')">❌ No Mate</button>
+      <button onclick="addMate('Mate2')">➕ Add Mate</button>
+    </div>
+    <div class="mate-line" id="line3">
+      <p>Mate3 Total Damage: <span id="d3">0</span></p>
+      <button onclick="resetMate('Mate3')">❌ No Mate</button>
+      <button onclick="addMate('Mate3')">➕ Add Mate</button>
+    </div>
   </div>
 
   <script>
-    const targets = ["Mate1", "Mate2", "Mate3"];
     const damageTotals = {
       "Mate1": 0,
       "Mate2": 0,
       "Mate3": 0
     };
 
+    const activeMates = {
+      "Mate1": true,
+      "Mate2": true,
+      "Mate3": true
+    };
+
     function rollAndApply() {
-      const target = targets[Math.floor(Math.random() * targets.length)];
+      const activeTargets = Object.keys(activeMates).filter(m => activeMates[m]);
+      if (activeTargets.length === 0) {
+        document.getElementById("result").textContent = "No active mates!";
+        return;
+      }
+
+      const target = activeTargets[Math.floor(Math.random() * activeTargets.length)];
       const damage = (Math.floor(Math.random() * 6) + 1) * 10; // 10 to 60
       damageTotals[target] += damage;
 
@@ -53,6 +75,23 @@
       document.getElementById("d1").textContent = damageTotals["Mate1"];
       document.getElementById("d2").textContent = damageTotals["Mate2"];
       document.getElementById("d3").textContent = damageTotals["Mate3"];
+    }
+
+    function resetMate(name) {
+      damageTotals[name] = 0;
+      activeMates[name] = false;
+      updateDisplay();
+    }
+
+    function addMate(name) {
+      activeMates[name] = true;
+      updateDisplay();
+    }
+
+    function updateDisplay() {
+      document.getElementById("d1").textContent = activeMates["Mate1"] ? damageTotals["Mate1"] : "Out";
+      document.getElementById("d2").textContent = activeMates["Mate2"] ? damageTotals["Mate2"] : "Out";
+      document.getElementById("d3").textContent = activeMates["Mate3"] ? damageTotals["Mate3"] : "Out";
     }
   </script>
 </body>
