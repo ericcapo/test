@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MicroMates</title>
+  <title>MicroMates Multiplayer</title>
   <style>
     body {
       font-family: sans-serif;
@@ -14,13 +14,18 @@
       font-size: 14px;
       vertical-align: middle;
     }
-    #result {
-      font-size: 18px;
-      margin-top: 20px;
+    select {
+      font-size: 16px;
+      padding: 6px;
+      margin-bottom: 20px;
     }
     .mate-line {
       margin: 10px 0;
       font-size: 16px;
+    }
+    #result {
+      font-size: 18px;
+      margin-top: 20px;
     }
     #threat-section {
       margin-top: 40px;
@@ -34,161 +39,141 @@
   </style>
 </head>
 <body>
-  <h1>MicroMates</h1>
-  <h1>Player 1</h1>
-  <button onclick="rollAndApply()">The threat attacks</button>
+  <h1>MicroMates Multiplayer</h1>
+
+  <label for="playerSelect">Select Player: </label>
+  <select id="playerSelect" onchange="updateDisplay()">
+    <option value="Player1">Player 1</option>
+    <option value="Player2">Player 2</option>
+    <option value="Player3">Player 3</option>
+    <option value="Player4">Player 4</option>
+  </select>
+
+  <br>
+  <button onclick="rollAndApply()">🎯 Roll & Apply</button>
 
   <div id="result">No damage yet</div>
 
   <div id="totals">
-    <div class="mate-line" id="line1">
-      Mate1 Total Damage: <span id="d1">0</span>
-      <button onclick="resetMate('Mate1')">❌ Mate defeated</button>
-      <button onclick="addMate('Mate1')">➕ New Mate</button>
-    </div>
-    <div class="mate-line" id="line2">
-      Mate2 Total Damage: <span id="d2">0</span>
-      <button onclick="resetMate('Mate2')">❌ Mate defeated</button>
-      <button onclick="addMate('Mate2')">➕ New Mate</button>
-    </div>
-    <div class="mate-line" id="line3">
-      Mate3 Total Damage: <span id="d3">0</span>
-      <button onclick="resetMate('Mate3')">❌ Mate defeated</button>
-      <button onclick="addMate('Mate3')">➕ New Mate</button>
-    </div>
+    <!-- Mates will be dynamically generated here -->
   </div>
 
-    <h1>Player 2</h1>
-  <button onclick="rollAndApply()">The threat attacks</button>
-
-  <div id="result">No damage yet</div>
-
-  <div id="totals">
-    <div class="mate-line" id="line1">
-      Mate1 Total Damage: <span id="d1">0</span>
-      <button onclick="resetMate('Mate1')">❌ Mate defeated</button>
-      <button onclick="addMate('Mate1')">➕ New Mate</button>
-    </div>
-    <div class="mate-line" id="line2">
-      Mate2 Total Damage: <span id="d2">0</span>
-      <button onclick="resetMate('Mate2')">❌ Mate defeated</button>
-      <button onclick="addMate('Mate2')">➕ New Mate</button>
-    </div>
-    <div class="mate-line" id="line3">
-      Mate3 Total Damage: <span id="d3">0</span>
-      <button onclick="resetMate('Mate3')">❌ Mate defeated</button>
-      <button onclick="addMate('Mate3')">➕ New Mate</button>
-    </div>
-  </div>
-  
   <!-- Threat Damage Section -->
   <div id="threat-section">
-    <p id="threat-damage">Threat part 1 Total Damage: <span id="threatTotal">0</span></p>
+    <p id="threat-damage">Threat Total Damage: <span id="threatTotal">0</span></p>
     <button onclick="addThreatDamage(10)">Add 10 Damage</button>
     <button onclick="addThreatDamage(50)">Add 50 Damage</button>
     <button onclick="addThreatDamage(100)">Add 100 Damage</button>
     <button onclick="defeatThreat()">Defeated Threat</button>
   </div>
 
-    <div id="threat-section">
-    <p id="threat-damage">Threat part 2 Total Damage: <span id="threatTotal">0</span></p>
-    <button onclick="addThreatDamage(10)">Add 10 Damage</button>
-    <button onclick="addThreatDamage(50)">Add 50 Damage</button>
-    <button onclick="addThreatDamage(100)">Add 100 Damage</button>
-    <button onclick="defeatThreat()">Defeated Threat</button>
-  </div>
-
-
-  <div id="threat-section">
-    <p id="threat-damage">Threat part 3 Total Damage: <span id="threatTotal">0</span></p>
-    <button onclick="addThreatDamage(10)">Add 10 Damage</button>
-    <button onclick="addThreatDamage(50)">Add 50 Damage</button>
-    <button onclick="addThreatDamage(100)">Add 100 Damage</button>
-    <button onclick="defeatThreat()">Defeated Threat</button>
-  </div>
-
-    <div id="threat-section">
-    <p id="threat-damage">Threat part 4 Total Damage: <span id="threatTotal">0</span></p>
-    <button onclick="addThreatDamage(10)">Add 10 Damage</button>
-    <button onclick="addThreatDamage(50)">Add 50 Damage</button>
-    <button onclick="addThreatDamage(100)">Add 100 Damage</button>
-    <button onclick="defeatThreat()">Defeated Threat</button>
-  </div>
-
-    <div id="threat-section">
-    <p id="threat-damage">Threat part 5 Total Damage: <span id="threatTotal">0</span></p>
-    <button onclick="addThreatDamage(10)">Add 10 Damage</button>
-    <button onclick="addThreatDamage(50)">Add 50 Damage</button>
-    <button onclick="addThreatDamage(100)">Add 100 Damage</button>
-    <button onclick="defeatThreat()">Defeated Threat</button>
-  </div>
-
-      <div id="threat-section">
-    <p id="threat-damage">Threat part 6 Total Damage: <span id="threatTotal">0</span></p>
-    <button onclick="addThreatDamage(10)">Add 10 Damage</button>
-    <button onclick="addThreatDamage(50)">Add 50 Damage</button>
-    <button onclick="addThreatDamage(100)">Add 100 Damage</button>
-    <button onclick="defeatThreat()">Defeated Threat</button>
-  </div>
-  
-  <script>
-    const damageTotals = {
-      "Mate1": 0,
-      "Mate2": 0,
-      "Mate3": 0
-    };
-
-    const activeMates = {
-      "Mate1": true,
-      "Mate2": true,
-      "Mate3": true
-    };
-
-    let threatDamage = 0;
-
-    function rollAndApply() {
-      const activeTargets = Object.keys(activeMates).filter(m => activeMates[m]);
-      if (activeTargets.length === 0) {
-        document.getElementById("result").textContent = "No active mates!";
-        return;
+<script>
+  const players = {
+    Player1: {
+      mates: {
+        Mate1: { damage: 0, active: true },
+        Mate2: { damage: 0, active: true },
+        Mate3: { damage: 0, active: true },
       }
+    },
+    Player2: {
+      mates: {
+        Mate1: { damage: 0, active: true },
+        Mate2: { damage: 0, active: true },
+        Mate3: { damage: 0, active: true },
+      }
+    },
+    Player3: {
+      mates: {
+        Mate1: { damage: 0, active: true },
+        Mate2: { damage: 0, active: true },
+        Mate3: { damage: 0, active: true },
+      }
+    },
+    Player4: {
+      mates: {
+        Mate1: { damage: 0, active: true },
+        Mate2: { damage: 0, active: true },
+        Mate3: { damage: 0, active: true },
+      }
+    }
+  };
 
-      const target = activeTargets[Math.floor(Math.random() * activeTargets.length)];
-      const damage = (Math.floor(Math.random() * 6) + 1) * 10; // 10 to 60
-      damageTotals[target] += damage;
+  let threatDamage = 0;
 
-      document.getElementById("result").textContent = `${target} takes ${damage} damage`;
+  function rollAndApply() {
+    const selectedPlayer = document.getElementById("playerSelect").value;
+    const mates = players[selectedPlayer].mates;
 
-      updateDisplay();
+    // Get only active mates for this player
+    const activeMates = Object.keys(mates).filter(m => mates[m].active);
+
+    if (activeMates.length === 0) {
+      document.getElementById("result").textContent = "No active mates for " + selectedPlayer;
+      return;
     }
 
-    function resetMate(name) {
-      damageTotals[name] = 0;
-      activeMates[name] = false;
-      updateDisplay();
+    const target = activeMates[Math.floor(Math.random() * activeMates.length)];
+    const damage = (Math.floor(Math.random() * 6) + 1) * 10; // 10 to 60
+    mates[target].damage += damage;
+
+    document.getElementById("result").textContent = `${selectedPlayer}'s ${target} takes ${damage} damage`;
+
+    updateDisplay();
+  }
+
+  function resetMate(player, mate) {
+    players[player].mates[mate].damage = 0;
+    players[player].mates[mate].active = false;
+    updateDisplay();
+  }
+
+  function addMate(player, mate) {
+    players[player].mates[mate].active = true;
+    // optionally reset damage when re-adding
+    players[player].mates[mate].damage = 0;
+    updateDisplay();
+  }
+
+  function addThreatDamage(amount) {
+    threatDamage += amount;
+    updateDisplay();
+  }
+
+  function defeatThreat() {
+    threatDamage = 0;
+    updateDisplay();
+  }
+
+  function updateDisplay() {
+    const selectedPlayer = document.getElementById("playerSelect").value;
+    const mates = players[selectedPlayer].mates;
+    const totalsDiv = document.getElementById("totals");
+
+    // Clear previous
+    totalsDiv.innerHTML = "";
+
+    for (const mate in mates) {
+      const damage = mates[mate].damage;
+      const active = mates[mate].active;
+
+      const div = document.createElement("div");
+      div.className = "mate-line";
+      div.innerHTML = `
+        ${mate} Total Damage: <span>${active ? damage : "Out"}</span>
+        <button onclick="resetMate('${selectedPlayer}', '${mate}')">❌ No Mate</button>
+        <button onclick="addMate('${selectedPlayer}', '${mate}')">➕ Add Mate</button>
+      `;
+      totalsDiv.appendChild(div);
     }
 
-    function addMate(name) {
-      activeMates[name] = true;
-      updateDisplay();
-    }
+    // Update threat damage display
+    document.getElementById("threatTotal").textContent = threatDamage;
+  }
 
-    function updateDisplay() {
-      document.getElementById("d1").textContent = activeMates["Mate1"] ? damageTotals["Mate1"] : "Out";
-      document.getElementById("d2").textContent = activeMates["Mate2"] ? damageTotals["Mate2"] : "Out";
-      document.getElementById("d3").textContent = activeMates["Mate3"] ? damageTotals["Mate3"] : "Out";
-      document.getElementById("threatTotal").textContent = threatDamage;
-    }
+  // Initialize display on load
+  updateDisplay();
+</script>
 
-    function addThreatDamage(amount) {
-      threatDamage += amount;
-      updateDisplay();
-    }
-
-    function defeatThreat() {
-      threatDamage = 0;
-      updateDisplay();
-    }
-  </script>
 </body>
 </html>
