@@ -20,11 +20,20 @@
     .mate-line {
       margin: 10px 0;
     }
+    #threat-section {
+      margin-top: 40px;
+      border-top: 1px solid #ccc;
+      padding-top: 20px;
+    }
+    #threat-damage {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
   <h1>MicroMates</h1>
-  <button onclick="rollAndApply()">The threat attack</button>
+  <button onclick="rollAndApply()">🎯 Roll & Apply</button>
 
   <div id="result">No damage yet</div>
 
@@ -46,6 +55,15 @@
     </div>
   </div>
 
+  <!-- Threat Damage Section -->
+  <div id="threat-section">
+    <p id="threat-damage">Threat Total Damage: <span id="threatTotal">0</span></p>
+    <button onclick="addThreatDamage(10)">Add 10 Damage</button>
+    <button onclick="addThreatDamage(50)">Add 50 Damage</button>
+    <button onclick="addThreatDamage(100)">Add 100 Damage</button>
+    <button onclick="defeatThreat()">Defeated Threat</button>
+  </div>
+
   <script>
     const damageTotals = {
       "Mate1": 0,
@@ -58,6 +76,8 @@
       "Mate2": true,
       "Mate3": true
     };
+
+    let threatDamage = 0;
 
     function rollAndApply() {
       const activeTargets = Object.keys(activeMates).filter(m => activeMates[m]);
@@ -72,9 +92,7 @@
 
       document.getElementById("result").textContent = `${target} takes ${damage} damage`;
 
-      document.getElementById("d1").textContent = damageTotals["Mate1"];
-      document.getElementById("d2").textContent = damageTotals["Mate2"];
-      document.getElementById("d3").textContent = damageTotals["Mate3"];
+      updateDisplay();
     }
 
     function resetMate(name) {
@@ -92,6 +110,17 @@
       document.getElementById("d1").textContent = activeMates["Mate1"] ? damageTotals["Mate1"] : "Out";
       document.getElementById("d2").textContent = activeMates["Mate2"] ? damageTotals["Mate2"] : "Out";
       document.getElementById("d3").textContent = activeMates["Mate3"] ? damageTotals["Mate3"] : "Out";
+      document.getElementById("threatTotal").textContent = threatDamage;
+    }
+
+    function addThreatDamage(amount) {
+      threatDamage += amount;
+      updateDisplay();
+    }
+
+    function defeatThreat() {
+      threatDamage = 0;
+      updateDisplay();
     }
   </script>
 </body>
