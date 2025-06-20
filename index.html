@@ -13,30 +13,25 @@
       margin: 20px;
       font-size: 18px;
     }
-    #log {
-      list-style: none;
-      padding: 0;
-      font-size: 16px;
+    #result {
+      font-size: 18px;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
   <h1>MicroMates</h1>
   <button onclick="rollAndApply()">🎯 Roll & Apply</button>
-  <ul id="log">
-    <li id="latestResult">No damage yet</li>
-  </ul>
-  
+  <div id="result">No damage yet</div>
+
   <script>
     const targets = ["Mate1", "Mate2", "Mate3"];
 
     function rollAndApply() {
       const target = targets[Math.floor(Math.random() * targets.length)];
-      const damage = (Math.floor(Math.random() * 10) + 1) * 10;
-      const log = document.getElementById("log");
-      const entry = document.createElement("li");
-      entry.textContent = `${target} takes ${damage} damage`;
-      log.appendChild(entry);
+      const damage = (Math.floor(Math.random() * 6) + 1) * 10; // 10 to 60
+      document.getElementById("result").textContent = `${target} takes ${damage} damage`;
     }
   </script>
 </body>
+</html>
