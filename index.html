@@ -35,7 +35,7 @@
 </head>
 <body>
   <h1>MicroMates</h1>
-  <button onclick="rollAndApply()">The threat attack</button>
+  <button onclick="rollAndApply()">Threat attack</button>
 
   <div id="result">No damage yet</div>
 
@@ -59,4 +59,71 @@
 
   <!-- Threat Damage Section -->
   <div id="threat-section">
-    <p id="thr
+    <p id="threat-damage">Threat Total Damage: <span id="threatTotal">0</span></p>
+    <button onclick="addThreatDamage(10)">Add 10 Damage</button>
+    <button onclick="addThreatDamage(50)">Add 50 Damage</button>
+    <button onclick="addThreatDamage(100)">Add 100 Damage</button>
+    <button onclick="defeatThreat()">Defeated Threat</button>
+  </div>
+
+  <script>
+    const damageTotals = {
+      "Mate1": 0,
+      "Mate2": 0,
+      "Mate3": 0
+    };
+
+    const activeMates = {
+      "Mate1": true,
+      "Mate2": true,
+      "Mate3": true
+    };
+
+    let threatDamage = 0;
+
+    function rollAndApply() {
+      const activeTargets = Object.keys(activeMates).filter(m => activeMates[m]);
+      if (activeTargets.length === 0) {
+        document.getElementById("result").textContent = "No active mates!";
+        return;
+      }
+
+      const target = activeTargets[Math.floor(Math.random() * activeTargets.length)];
+      const damage = (Math.floor(Math.random() * 6) + 1) * 10; // 10 to 60
+      damageTotals[target] += damage;
+
+      document.getElementById("result").textContent = `${target} takes ${damage} damage`;
+
+      updateDisplay();
+    }
+
+    function resetMate(name) {
+      damageTotals[name] = 0;
+      activeMates[name] = false;
+      updateDisplay();
+    }
+
+    function addMate(name) {
+      activeMates[name] = true;
+      updateDisplay();
+    }
+
+    function updateDisplay() {
+      document.getElementById("d1").textContent = activeMates["Mate1"] ? damageTotals["Mate1"] : "Out";
+      document.getElementById("d2").textContent = activeMates["Mate2"] ? damageTotals["Mate2"] : "Out";
+      document.getElementById("d3").textContent = activeMates["Mate3"] ? damageTotals["Mate3"] : "Out";
+      document.getElementById("threatTotal").textContent = threatDamage;
+    }
+
+    function addThreatDamage(amount) {
+      threatDamage += amount;
+      updateDisplay();
+    }
+
+    function defeatThreat() {
+      threatDamage = 0;
+      updateDisplay();
+    }
+  </script>
+</body>
+</html>
