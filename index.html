@@ -10,8 +10,9 @@
     }
     button {
       padding: 6px 12px;
-      margin: 5px;
+      margin-left: 10px;
       font-size: 14px;
+      vertical-align: middle;
     }
     #result {
       font-size: 18px;
@@ -19,6 +20,7 @@
     }
     .mate-line {
       margin: 10px 0;
+      font-size: 16px;
     }
     #threat-section {
       margin-top: 40px;
@@ -33,23 +35,23 @@
 </head>
 <body>
   <h1>MicroMates</h1>
-  <button onclick="rollAndApply()">🎯 Roll & Apply</button>
+  <button onclick="rollAndApply()">The threat attack</button>
 
   <div id="result">No damage yet</div>
 
   <div id="totals">
     <div class="mate-line" id="line1">
-      <p>Mate1 Total Damage: <span id="d1">0</span></p>
+      Mate1 Total Damage: <span id="d1">0</span>
       <button onclick="resetMate('Mate1')">❌ No Mate</button>
       <button onclick="addMate('Mate1')">➕ Add Mate</button>
     </div>
     <div class="mate-line" id="line2">
-      <p>Mate2 Total Damage: <span id="d2">0</span></p>
+      Mate2 Total Damage: <span id="d2">0</span>
       <button onclick="resetMate('Mate2')">❌ No Mate</button>
       <button onclick="addMate('Mate2')">➕ Add Mate</button>
     </div>
     <div class="mate-line" id="line3">
-      <p>Mate3 Total Damage: <span id="d3">0</span></p>
+      Mate3 Total Damage: <span id="d3">0</span>
       <button onclick="resetMate('Mate3')">❌ No Mate</button>
       <button onclick="addMate('Mate3')">➕ Add Mate</button>
     </div>
@@ -57,71 +59,4 @@
 
   <!-- Threat Damage Section -->
   <div id="threat-section">
-    <p id="threat-damage">Threat Total Damage: <span id="threatTotal">0</span></p>
-    <button onclick="addThreatDamage(10)">Add 10 Damage</button>
-    <button onclick="addThreatDamage(50)">Add 50 Damage</button>
-    <button onclick="addThreatDamage(100)">Add 100 Damage</button>
-    <button onclick="defeatThreat()">Defeated Threat</button>
-  </div>
-
-  <script>
-    const damageTotals = {
-      "Mate1": 0,
-      "Mate2": 0,
-      "Mate3": 0
-    };
-
-    const activeMates = {
-      "Mate1": true,
-      "Mate2": true,
-      "Mate3": true
-    };
-
-    let threatDamage = 0;
-
-    function rollAndApply() {
-      const activeTargets = Object.keys(activeMates).filter(m => activeMates[m]);
-      if (activeTargets.length === 0) {
-        document.getElementById("result").textContent = "No active mates!";
-        return;
-      }
-
-      const target = activeTargets[Math.floor(Math.random() * activeTargets.length)];
-      const damage = (Math.floor(Math.random() * 6) + 1) * 10; // 10 to 60
-      damageTotals[target] += damage;
-
-      document.getElementById("result").textContent = `${target} takes ${damage} damage`;
-
-      updateDisplay();
-    }
-
-    function resetMate(name) {
-      damageTotals[name] = 0;
-      activeMates[name] = false;
-      updateDisplay();
-    }
-
-    function addMate(name) {
-      activeMates[name] = true;
-      updateDisplay();
-    }
-
-    function updateDisplay() {
-      document.getElementById("d1").textContent = activeMates["Mate1"] ? damageTotals["Mate1"] : "Out";
-      document.getElementById("d2").textContent = activeMates["Mate2"] ? damageTotals["Mate2"] : "Out";
-      document.getElementById("d3").textContent = activeMates["Mate3"] ? damageTotals["Mate3"] : "Out";
-      document.getElementById("threatTotal").textContent = threatDamage;
-    }
-
-    function addThreatDamage(amount) {
-      threatDamage += amount;
-      updateDisplay();
-    }
-
-    function defeatThreat() {
-      threatDamage = 0;
-      updateDisplay();
-    }
-  </script>
-</body>
-</html>
+    <p id="thr
